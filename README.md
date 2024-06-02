@@ -2,7 +2,7 @@
 
 a script to automate the building of custom void linux images for the Raspberry Pi  
 This tool is intended to be automated with my modified version of [drist]() to run the build on a remote build server and then copy the image back.  
-It also assumes the remote build server is a void linux host. Building void linux requires the use of the offical void-mklive repository, and its tooling is not guarenteed to work on systems that are *not* void. So the remote build server must be a void liux host. This tool will automatically download the void-mklive repo and its dependencies to the remote host in a temporary working directory that will be removed once compiliation is complete is complete.
+It also assumes the remote build server is a void linux host. Building void linux requires the use of the offical void-mklive repository, and its tooling is not guarenteed to work on systems that are *not* void. So the remote build server must be a void liux host. This tool will automatically download the void-mklive repo and its dependencies to the remote host in a temporary working directory that will be removed once compiliation is complete.
 
 ---
 
