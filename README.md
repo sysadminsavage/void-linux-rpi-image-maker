@@ -1,4 +1,4 @@
-# RPi Void Linux image maker by nixsalad
+# RPi Void Linux image maker
 a script to automate the building of custom void linux images for the Raspberry Pi  
 This tool uses my modified version of [drist]() to run the build on a remote build server and copy the image back to the local client.
 
@@ -21,7 +21,7 @@ deviates from the default void linux image in the following ways:
 
 ## Makefile Usage
 ```
-RPi Void Linux image maker by nixsalad
+RPi Void Linux image maker
 -------------------------------------
 This tool uses drist to run the build on a remote server
 and copy the image back to the local client
