@@ -1,0 +1,49 @@
+#!/bin/sh
+#n0
+# File: script (drist playbook)
+# Description: build and configure a custom void linux image for the rpi3
+# Author: wfnintr
+# Date: 2021-06-11
+# updated 2024-2-14 #js
+# updated 2024-03-07 #js
+#a110w
+
+DATECODE=$(date "+%Y%m%d")
+
+install_depends(){
+	# Install the dependencies, clone the void-mklive directory
+	xbps-install -Syu xbps && {
+		xbps-install -Syu
+		xbps-install -y bash git xtools xz qemu-user-static && \
+			git clone https://github.com/void-linux/void-mklive
+		}
+}
+
+build_rootfs(){
+	# Build a base rootfs (aarch64) 
+	cd void-mklive && \
+		make void-aarch64-ROOTFS-$DATECODE.tar.xz
+}
+
+build_platformfs(){
+	# Build the platform-specifc rootfs from the base root filesystem plus a few changes:
+	./mkplatformfs.sh \
+	  -r https://alpha.de.repo.voidlinux.org/current \
+	  -r https://alpha.de.repo.voidlinux.org/current/aarch64 \
+	  -p 'incus incus-client socklog-void opendoas wpa_supplicant' \
+	  -x 2 \
+	  -k '../post-script.sh' \
+	  rpi-aarch64 void-aarch64-ROOTFS-$DATECODE.tar.xz
+}
+
+save_platformfs(){
+	# with my modified version of drist, everything in tempdir results is copied back to the client
+	mkdir ../results
+	cp -v void-rpi-aarch64-PLATFORMFS-$DATECODE.tar.xz ../results/void-rpi-aarch64-PLATFORMFS-$DATECODE.tar.xz
+}
+
+install_depends || exit 1
+build_rootfs && {
+	build_platformfs
+	save_platformfs
+}

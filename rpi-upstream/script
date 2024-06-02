@@ -1,0 +1,36 @@
+#!/bin/sh
+#n0
+# File: script (drist playbook)
+# Description: build the official upstream rpi3 void-linux image with no changes
+# Author: wfnintr
+# Date: 2021-06-11
+# updated 2024-03-07 #js
+#a110w
+
+DATECODE=$(date "+%Y%m%d")
+
+install_depends(){
+	# Install the dependencies, clone the void-mklive directory
+	xbps-install -Syu xbps && {
+		xbps-install -Syu
+		xbps-install -y bash git xtools xz qemu-user-static && \
+			git clone https://github.com/void-linux/void-mklive
+	}
+}
+
+build_image(){
+	# Build the rootfs, platformfs and image all in one shot:
+	cd void-mklive && \
+		make $( (make rootfs-all-print ; make images-all-sbc-print ) | grep -e aarch64-ROOTFS -e rpi-aarch64-$DATECODE)
+}
+
+save_image(){
+	# with my modified version of drist, everything in tempdir results is copied back to the client
+	mkdir ../results
+	cp -v void-rpi-aarch64-PLATFORMFS-$DATECODE.tar.xz ../results/
+	cp -v void-rpi-aarch64-$DATECODE.img.xz ../results/
+}
+
+install_depends || exit 1
+build_image
+save_image
